@@ -16,3 +16,9 @@ doc/api/
 
 *input*.png
 *output*.png
+/.idea/canny_edge_detection.iml
+/.idea/libraries/Dart_Packages.xml
+/.idea/libraries/Dart_SDK.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml
