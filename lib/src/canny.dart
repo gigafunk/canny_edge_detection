@@ -28,13 +28,13 @@ import 'package:image/image.dart';
 Set<Set<Index2d>> canny(
   Image image, {
   int blurRadius = 2,
-  int lowThreshold,
-  int highThreshold,
-  void Function(Image image) onGrayConvertion,
-  void Function(Image image) onBlur,
-  void Function(Image image) onSobel,
-  void Function(Image image) onNonMaxSuppressed,
-  void Function(Image image) onImageResult,
+  int? lowThreshold,
+  int? highThreshold,
+  void Function(Image image)? onGrayConvertion,
+  void Function(Image image)? onBlur,
+  void Function(Image image)? onSobel,
+  void Function(Image image)? onNonMaxSuppressed,
+  void Function(Image image)? onImageResult,
   }
 ) {
   //<Convert colored image to grayscale data>
@@ -149,14 +149,16 @@ Set<Set<Index2d>> canny(
     lowThreshold = lowThreshold.clamp(0, 255).toInt();
     highThreshold = (lowThreshold * 2).clamp(0, 255).toInt();
   } else {
-    lowThreshold = lowThreshold.clamp(0, 255).toInt();
-    highThreshold = highThreshold.clamp(0, 255).toInt();
+    lowThreshold = lowThreshold!.clamp(0, 255).toInt();
+    highThreshold = highThreshold!.clamp(0, 255).toInt();
     if (lowThreshold > highThreshold) lowThreshold = highThreshold;
   }
 
+
   //hysteresis by blob analysis
-  bool Function(int x, int y) isWeak = (x,y) => getSafe(x,y,image) >= lowThreshold;
-  bool Function(int x, int y) isStrong = (x,y) => getSafe(x,y,image) >= highThreshold;
+  bool Function(int x, int y) isWeak = (x,y) => getSafe(x,y,image) >= (lowThreshold ?? 0);
+  bool Function(int x, int y) isStrong = (x,y) => getSafe(x,y,image) >= (highThreshold ?? 255);
+
   Set<Set<Index2d>> edges = Set();
   Set<Index2d> nonEdges = Set();
   int currentLabel = 2;
@@ -271,8 +273,8 @@ int _otsusMethod(Image image) {
   }
   final int imageDimension = image.width * image.height;
   
-  int bestThreshold;
-  double maxBetweenClassVariance;
+  int bestThreshold = 0;
+  double maxBetweenClassVariance = 0.0;
 
   for (var currentThreshold = 1; currentThreshold < 255; ++currentThreshold) {
     //helper values

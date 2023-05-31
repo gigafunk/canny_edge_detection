@@ -4,8 +4,13 @@ import 'package:image/image.dart';
 
 
 void main() {
-  Image image = decodeImage(File("input.png").readAsBytesSync());
+  Image? tempImage = decodeImage(File("input.png").readAsBytesSync());
+  if (tempImage == null) {
+    print("Failed to decode image.");
+    return;
+  }
+
+  Image image = tempImage;
   canny(image);
   File("output.png").writeAsBytesSync(encodePng(image));
 }
-
